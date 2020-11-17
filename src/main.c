@@ -4,6 +4,7 @@ A prototype now
 */
 #include <stdio.h>
 #include <string.h>
+#include <ncurses.h>
 
 // >>>>>>>>>>> Header <<<<<<<<<<<<<<<<<
 #define MAX_BUF_LEN 2048

@@ -34,7 +34,7 @@ void check_result(int result)
 }
 
 // >>>>>>>>>>>> Main <<<<<<<<<<<<<<<<<<<<
-int main(int argc, char *argv)
+int main(int argc, char **argv)
 {
     // prompt, can be read from config in the future
     const char *prompt = "[console]> ";

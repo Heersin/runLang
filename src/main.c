@@ -4,7 +4,8 @@ A prototype now
 */
 #include <stdio.h>
 #include <string.h>
-#include <ncurses.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 // >>>>>>>>>>> Header <<<<<<<<<<<<<<<<<
 #define MAX_BUF_LEN 2048
@@ -37,20 +38,17 @@ int main(int argc, char *argv)
 {
     // prompt, can be read from config in the future
     const char *prompt = "[console]> ";
-    char cmd_buffer[MAX_BUF_LEN];
+    char *cmd_buffer = NULL;
     int result = 0;
 
     // display the welcome info
     printf("Welcome Hereeee, Ctrl-C to quit\n");
 
     // A while loop to recv input
-    while(1)
+    while((cmd_buffer = readline(prompt)) != NULL)
     {
-        fputs(prompt, stdout);
-        fgets(cmd_buffer, 2048, stdin);
-
-        // clear the last char -- '\n'
-        cmd_buffer[strlen(cmd_buffer) - 1] = '\0';
+        if (strlen(cmd_buffer) > 0)
+            add_history(cmd_buffer);
 
         // relay to handler
         result = cmd_handle(cmd_buffer);

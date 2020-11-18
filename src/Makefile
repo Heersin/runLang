@@ -9,7 +9,7 @@ CC = gcc
 COMPILER_FLAGS = -w
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lncurses
+LINKER_FLAGS = -lreadline
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = lisping

@@ -21,8 +21,8 @@ int main(int argc, char **argv)
     /* Define them with the following Language */
     mpca_lang(MPCA_LANG_DEFAULT,
         "                                                     \
-        number   : /-?[0-9]+/ ;                             \
-        operator : '+' | '-' | '*' | '/' ;                  \
+        number   : /-?[0-9]+.*[0-9]*/ ;                             \
+        operator : '+' | '-' | '*' | '/' | '%';                  \
         expr     : <number> | '(' <operator> <expr>+ ')' ;  \
         lispy    : /^/ <operator> <expr>+ /$/ ;             \
         ",
@@ -32,7 +32,6 @@ int main(int argc, char **argv)
     // prompt, can be read from config in the future
     const char *prompt = "[console]> ";
     char *cmd_buffer = NULL;
-    int result = 0;
 
     // display the welcome info
     printf("Welcome Hereeee, Ctrl-C to quit\n");

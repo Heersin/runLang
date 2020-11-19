@@ -2,10 +2,8 @@
 Aim to build a command interpreter
 A prototype now
 */
-#include <stdio.h>
-#include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+
+#include "lisp.h"
 
 // >>>>>>>>>>> Header <<<<<<<<<<<<<<<<<
 #define MAX_BUF_LEN 2048

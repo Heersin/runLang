@@ -21,8 +21,8 @@ TEST_OBJ = $(patsubst %.c, $(DIR_TEST_OBJ)/%.o, $(notdir ${TEST_SRC}))
 
 all: $(TEST_TARGET)
 
-$(TEST_TARGET): $(DIR_TEST_BIN)/%.bin: $(TEST_OBJ)
-	$(CC) $(LIBS) $(CFLAGS) $(LINKER_FLAGS) $^ -o $@
+$(TEST_TARGET):$(TEST_OBJ)
+	$(CC) $(CFLAGS) $(LINKER_FLAGS) -o $@ $(LIBS) $<
 
 $(DIR_TEST_OBJ)/%.o: $(DIR_TEST_SRC)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<

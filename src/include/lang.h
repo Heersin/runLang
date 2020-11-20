@@ -4,9 +4,11 @@
 #include "mpc.h"
 #include <string.h>
 
+#define MAX_LANG 8
 #define CMD 0
 #define LISP 1
 #define CALC 2
+#define NOLANG -1
 
 struct LangParserStruct
 {

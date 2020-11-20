@@ -1,35 +1,12 @@
 /*
 Aim to build a command interpreter
 A prototype now
+// TODOD : last parser won't be cleaned up
+            though it causes no problem
+            should keep a global var CURRENT_LANG to solve this
 */
 
-#include "lisp.h"
-
-// >>>>>>>>>>> Header <<<<<<<<<<<<<<<<<
-#define MAX_BUF_LEN 2048
-
-int cmd_handle(char *input);
-void check_result(int result);
-
-
-// >>>>>>>>>>>> Implement <<<<<<<<<<<<
-int cmd_handle(char *input)
-{
-    // just passed now
-    fprintf(stdout, "OK I got the input '%s' but do nothing now\n", input);
-    if (strcmp("wrong", input) == 0)
-    {
-        printf("Oh We cannot exec 'wrong' :( \n");
-        return 0;
-    }
-    return 1;
-}
-
-void check_result(int result)
-{
-    if (result == 0)
-        fprintf(stderr, "x");
-}
+#include "engine.h"
 
 // >>>>>>>>>>>> Main <<<<<<<<<<<<<<<<<<<<
 int main(int argc, char **argv)
@@ -38,6 +15,9 @@ int main(int argc, char **argv)
     const char *prompt = "[console]> ";
     char *cmd_buffer = NULL;
     int result = 0;
+    
+    // init support lang
+    init_context();
 
     // display the welcome info
     printf("Welcome Hereeee, Ctrl-C to quit\n");
@@ -53,7 +33,10 @@ int main(int argc, char **argv)
 
         // check result
         check_result(result);
+        free(cmd_buffer);
     }
+
+    clean_context();
 
     return 0;
 }

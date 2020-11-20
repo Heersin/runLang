@@ -1,6 +1,6 @@
 #include "lisp.h"
 
-LangParser init_lisp()
+LangParser init_lisp(void)
 {
     LangParser lisp_parser;
     lisp_parser = init_parser(4);

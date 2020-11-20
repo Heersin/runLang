@@ -1,7 +1,9 @@
 #include "lisp.h"
 
-LispParser init_lisp()
+LangParser init_lisp()
 {
+    LangParser lisp_parser;
+    lisp_parser = init_parser(4);
     mpc_parser_t *Number = mpc_new("number");
     mpc_parser_t *Symbol = mpc_new("symbol");
     mpc_parser_t *Sexpr = mpc_new("sexpr");
@@ -21,25 +23,25 @@ LispParser init_lisp()
         Number, Symbol, Sexpr, Expr, Lang);
 
     // prepare language struct
-    LispParser parser = (LispParser)malloc(sizeof(struct LispParserStruct));
-    parser->Number = Number;
-    parser->Symbol = Symbol;
-    parser->Sexpr = Sexpr;
-    parser->Expr = Expr;
-    parser->Lang = Lang;
+    lisp_parser->lang = Lang;
+    lisp_parser->rule[0] = Number;
+    lisp_parser->rule[1] = Symbol;
+    lisp_parser->rule[2] = Sexpr;
+    lisp_parser->rule[3] = Expr;
 
-    return parser;
+    return lisp_parser;
 }
 
-void clean_lisp(LispParser parser)
+void clean_lisp(LangParser parser)
 {
     mpc_cleanup(5, 
-        parser->Number, 
-        parser->Symbol, 
-        parser->Sexpr, 
-        parser->Expr, 
-        parser->Lang);
-    free(parser);
+        parser->Lang, 
+        parser->rule[0], 
+        parser->rule[1], 
+        parser->rule[2], 
+        parser->rule[3]
+    );
+    clean_parser(parser);
 }
 
 // >>>>>>>>>>>>>>>>>>>> Functionality <<<<<<<<<<<<<<<<<<<

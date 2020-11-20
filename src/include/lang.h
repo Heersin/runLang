@@ -17,7 +17,7 @@ struct LangParserStruct
     int size; // size of lang rule
 };
 
-typedef LangParserStruct *LangParser;
+typedef struct LangParserStruct *LangParser;
 
 LangParser init_parser(int size);
 void clean_parser(LangParser parser);

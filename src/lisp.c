@@ -35,7 +35,7 @@ LangParser init_lisp(void)
 void clean_lisp(LangParser parser)
 {
     mpc_cleanup(5, 
-        parser->Lang, 
+        parser->lang, 
         parser->rule[0], 
         parser->rule[1], 
         parser->rule[2], 
@@ -181,7 +181,7 @@ lval lval_pop(lval v, int i)
     memmove(&v->cell[i], &v->cell[i+1], sizeof(lval) * (v->count - i - 1));
 
     // decrease
-    v->cout--;
+    v->count--;
 
     // realloc
     v->cell = realloc(v->cell, sizeof(lval) * v->count);
@@ -219,7 +219,7 @@ void _lval_print(lval v)
 }
 
 // a wrapper for recursive _lval_print
-void lval_print(lval v)
+void lval_println(lval v)
 {
     _lval_print(v);
     putchar('\n');

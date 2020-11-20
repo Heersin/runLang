@@ -13,6 +13,7 @@ int handle_input(char *input)
     void *(*_func_eval)(void *);
     void *(*_func_read)(mpc_ast_t*);
     void (*_func_println)(void *);
+    void *_val_x;
 
     // later move it as a cmd language?
     if ((cmd = strchr(input, "#")) != NULL)
@@ -44,9 +45,9 @@ int handle_input(char *input)
     }
 
     mpc_result_t r;
-    if (mpc_parse("<stdin>", input, _LANG_PARSER, &r))
+    if (mpc_parse("<stdin>", input, _LANG_PARSER->lang, &r))
     {
-        _val_x = (void *)_func_eval(_func_eval(r.output));
+        _val_x = (void *)_func_eval(_func_read(r.output));
         _func_println(_val_x);
         _func_del(_val_x);
         mpc_ast_delete(r.output); 

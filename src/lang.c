@@ -4,7 +4,7 @@ LangParser init_parser(int size)
 {
     LangParser parser = NULL;
 
-    parser = (LangParser) malloc(sizeof(LangParserStruct));    
+    parser = (LangParser) malloc(sizeof(struct LangParserStruct));    
     if (parser == NULL)
     {
         printf("[x]Init Parser Error\n");

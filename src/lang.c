@@ -61,5 +61,5 @@ int map_lang(char *lang_name)
     if (strcmp(lang_name, "calc") == 0)
         return CALC;
 
-    return -1;
+    return NOLANG;
 }

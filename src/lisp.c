@@ -80,7 +80,7 @@ lval lval_eval_sexpr(lval v)
     {
         lval_del(first_element);
         lval_del(v);
-        return lval_err("Symbol Expresstion (S-expr) Should Start with a symbol\n");
+        return lval_read_err("Symbol Expresstion (S-expr) Should Start with a symbol\n");
     }
 
     // operator
@@ -95,7 +95,7 @@ lval builtin_op(lval a, char *op)
     for (int i = 0; i < a->count; ++i)
         if(a->cell[i]->type != LVAL_NUM){
             lval_del(a);
-            return lval_err("Non-number Element !!\n");
+            return lval_read_err("Non-number Element !!\n");
         }
 
     // pop the first
@@ -120,7 +120,7 @@ lval builtin_op(lval a, char *op)
                 // Oops error
                 lval_del(x);
                 lval_del(y);
-                x = lval_err("Zero Division !\n");
+                x = lval_read_err("Zero Division !\n");
                 break;
             }
             x->num /= y->num;
@@ -141,6 +141,7 @@ lval lval_add(lval v, lval x)
     v->count++;
     v->cell = realloc(v->cell, v->count * sizeof(lval));
     v->cell[v->count - 1] = x;
+    return v;
 }
 
 void lval_del(lval v)
@@ -255,10 +256,20 @@ lval lval_read(mpc_ast_t *t)
     return x;
 }
 
-lval lval_read_num(long x){
+lval _lval_read_num(long x)
+{
     lval v = (lval)malloc(sizeof(struct LispVal));
     v->type = LVAL_NUM;
     v->num = x;
+    return v;
+}
+
+lval lval_read_num(mpc_ast_t *t)
+{
+    errno = 0;
+    long x = strtol(t->contents, NULL, 10);
+    return errno != ERANGE ?
+        _lval_read_num(x) : lval_read_err("invalid number");
 }
 
 lval lval_read_sym(char *sym){

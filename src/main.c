@@ -29,7 +29,7 @@ int main(int argc, char **argv)
             add_history(cmd_buffer);
 
         // relay to handler
-        result = cmd_handle(cmd_buffer);
+        result = handle_cmd(cmd_buffer);
 
         // check result
         check_result(result);

@@ -40,7 +40,9 @@ lval lval_take(lval v, int i);
 void _lval_print(lval v);
 void lval_println(lval v);
 lval lval_read(mpc_ast_t *t);
-lval lval_read_num(long x);
+
+lval _lval_read_num(long x);
+lval lval_read_num(mpc_ast_t *t);
 lval lval_read_sym(char *sym);
 lval lval_read_sexpr(void);
 lval lval_read_err(char *msg);

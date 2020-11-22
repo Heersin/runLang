@@ -12,8 +12,40 @@ make clean
 ./build/bin/lisping
 [console] >
 ```
+### Basic Concept
+this is a general interpreter, support only part of lisp now.
+command, lisp and other languages are treated as Lang.
 
-## Project Structure
+you can switch between these languages by using:
+```
+#[lang]
+```
+for example:
+```
+[console]> #lisp
+[*]Change Run Lang to -> lisp
+```
+will lead you into the lisp environment
+
+### Command Mode
+when you open this interpreter, you will enter the "cmd" language by default;
+the syntax of it is:
+
+> cmd_name args1 args2 args3 ...
+
+note that the charset of arg is [0-9a-zA-Z_]
+
+support command:
+* help -- print help message
+* info -- echo arg1
+* version -- print version info
+
+### Lisp 
+S-expr now
+
+## Develop Guid
+
+### Project Structure
 ```
 runLang
 ├── build
@@ -22,10 +54,9 @@ runLang
 ├── doc
 ├── lib     --- third library
 │   └── src
-├── lisp
 ├── src     --- src here
-│   └── include
-└── test
+│   └── include --- header file
+└── test    --- test codes
     ├── example
     ├── obj
     └── src
@@ -35,3 +66,5 @@ runLang
 ├── README.md
 
 ```
+
+

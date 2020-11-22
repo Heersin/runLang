@@ -40,10 +40,10 @@ support command:
 * info -- echo arg1
 * version -- print version info
 
-### Lisp 
+### Lisp Mode
 S-expr now
 
-## Develop Guid
+## Develop Guide
 
 ### Project Structure
 ```
@@ -67,4 +67,51 @@ runLang
 
 ```
 
+### Add a new Language
 
+Follow these steps to create more langs. In short, you need:
+
+* create two files (at least)
+  1. my_lang.c
+  2. my_lang.h
+
+* modify 3 files
+  1. lang.h
+  2. lang.c
+  3. engine.c
+
+you can check the "cmd.h" and "cmd.c" to learn the command language if feel confused.
+#### my_lang.h
+your own lang should expose these interfaces to outside world
+(substitute lang with the name of your lang)
+
+1. LangParser init_lang(void); -- init lang ast parser
+2. void clean_lang(LangParser); -- clean tree
+
+LangParser is defined in src/include/lang.h, store your lang parser
+in parser->lang, and others in rule[x];
+
+3. lang_val lang_read(LangParser parser) -- parse ast and store info in your own struct;
+4. lang_val lang_eval(lang_val val) -- exec lang
+5. void lang_println(lang_val val) -- print result/error ...
+6. void lang_del(lang_val val) -- delete lang_val
+
+`lang_val` is a pointer points to develop-defined structure.
+you can use it to recv result, print, eval ...
+
+#### my_lang.c
+1. init
+use mpc parser to create the ruler of lang
+
+2. lang_val
+It's a pointer (typedef pointer)
+
+#### lang.h
+define a new lang MACRO.
+
+#### lang.c
+in map_lang: convert your name of lang into MACRO
+
+#### engine.c
+in init_context:
+  add the exposed function into specified array.

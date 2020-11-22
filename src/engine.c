@@ -42,7 +42,7 @@ int handle_cmd(char *input)
     int lang_type;
 
     // later move it as a cmd language?
-    if ( *(cmd = strchr(input, '#')) != '\0')
+    if ((cmd = strchr(input, '#')) != NULL)
     {
         cmd += 1;
         lang_type = map_lang(cmd);
@@ -115,9 +115,17 @@ void init_context(void)
     _LANG_READS[LISP] = &lval_read;
     _LANG_PRINTS[LISP] = &lval_println;
 
-    int lang_type = LISP;
+    // init cmd
+    _LANG_INITS[CMD] = &init_cmd;
+    _LANG_CLEANS[CMD] = &clean_cmd;
+    _LANG_DELS[CMD] = &cmd_del;
+    _LANG_EVALS[CMD] = &cmd_eval;
+    _LANG_READS[CMD] = &cmd_read;
+    _LANG_PRINTS[CMD] = &cmd_println;
 
-    // init current lang
+
+    // init current first entered lang type
+    int lang_type = CMD;
     _lang_init = _LANG_INITS[lang_type];
     _lang_clean = _LANG_CLEANS[lang_type];
     _func_del = _LANG_DELS[lang_type];

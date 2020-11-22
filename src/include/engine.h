@@ -3,6 +3,7 @@
 #include "mpc.h"
 #include "lang.h"
 #include "lisp.h"
+#include "cmd.h"
 #include <string.h>
 
 int handle_cmd(char *input);

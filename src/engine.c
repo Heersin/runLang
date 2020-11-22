@@ -42,7 +42,7 @@ int handle_cmd(char *input)
     int lang_type;
 
     // later move it as a cmd language?
-    if ( *(cmd = strchr(input, '#')) != '\0')
+    if ((cmd = strchr(input, '#')) != NULL)
     {
         cmd += 1;
         lang_type = map_lang(cmd);

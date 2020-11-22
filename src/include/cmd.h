@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-enum { CMD_ERR, CMD_NO, CMD_RES }
+enum { CMD_ERR, CMD_NO, CMD_RES };
 
 // cmd syntax :
 // [cmd_name] [arg1] [arg2] ...
@@ -31,6 +31,6 @@ LangParser init_cmd(void);
 void clean_cmd(LangParser parser);
 cmdval cmd_read(mpc_ast_t *t);
 cmdval cmd_eval(cmdval v);
-void cmd_print(cmdval v);
+void cmd_println(cmdval v);
 void cmd_del(cmdval v);
 #endif

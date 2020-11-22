@@ -5,6 +5,116 @@
 * that means we can also create a language for it
 */
 
+// >>>>>> Static <<<<<<<<
+static char *help_msg()
+{
+    const char *msg = 
+    "[+]Use #[lang] to switch, support:\n\
+     \t[1]lisp\n\t[2]cmd\n\
+[+]Cmd support:\n\
+     \t[1]help: print this message\n\
+     \t[2]version: version info\n\
+     \t[3]info <msg>: echo message\n";
+    
+    char *v;
+    int len;
+
+    len = strlen(msg);
+    v = (char *)malloc(len + 1);
+    strcpy(v, msg);
+    v[len] = '\0';
+
+    return v;
+}
+
+static char *version_msg()
+{
+    const char *msg = "[+]version 0.2\n";
+    char *v;
+    int len;
+
+    len = strlen(msg);
+    v = (char *)malloc(len + 1);
+    strcpy(v, msg);
+    v[len] = '\0';
+
+    return v;
+}
+
+static char *info(char *msg)
+{
+    char *v;
+    int len;
+
+    len = strlen(msg);
+    v = (char *)malloc(len + 1);
+    strcpy(v, msg);
+    v[len] = '\0';
+
+    return v;
+}
+
+static cmdval cmd_init_val(int argc)
+{
+    cmdval v;
+    v = (cmdval)malloc(sizeof(struct CmdValStruct));
+    v->type = CMD_ERR;
+    v->result = NULL;
+    v->argc = argc;
+    v->argv = (char **)malloc(sizeof(char *) * argc);
+    return v;
+}
+
+static cmdval cmd_error(char *msg)
+{
+    cmdval v;
+    v = cmd_init_val(0);
+
+    int size = strlen(msg) + 1;
+    v->result = (char *)malloc(size);
+    strcpy(v->result, msg);
+    v->result[size] = '\0';
+
+    return v;
+}
+
+static cmdval _cmd_eval(cmdval v)
+{
+    char *cmd_name;
+    cmd_name = v->argv[0];
+
+    if(strcmp(cmd_name, "help") == 0)
+    {
+        v->type = CMD_RES;
+        v->result = help_msg();
+        return v;
+    }
+
+    if(strcmp(cmd_name, "version") == 0)
+    {
+        v->type = CMD_RES;
+        v->result = version_msg();
+        return v;
+    }
+
+    if(strcmp(cmd_name, "info") == 0)
+    {
+        if(v->argc != 2)
+        {
+            cmd_del(v);
+            return cmd_error("Info required one argument");
+        }
+        
+        v->result = info(v->argv[1]);
+        v->type = CMD_RES;
+        return v;
+    }
+
+    return cmd_error("Unknown Eval Here");
+}
+
+
+/// >>>>>> Expose Function <<<<<<<<<
 // 1. support init
 LangParser init_cmd(void)
 {
@@ -67,15 +177,16 @@ cmdval cmd_read(mpc_ast_t *t)
 
     // first one must be cmd
     // or use strstr("cmd_name" to find it)
-    for (int i = 0; i < argc; ++i)
+    // first and last is empty, drop them
+    for (int i = 1; i < argc - 1; ++i)
     {
-        tmp = children[i]->contents;
+        tmp = t->children[i]->contents;
         tmp_size = strlen(tmp) + 1;
-        v->argv[i] = (char *)malloc(tmp_size);
-        strcpy(v->argv[i], tmp);
-        v->argv[tmp_size] = '\0';
+        v->argv[i-1] = (char *)malloc(tmp_size);
+        strcpy(v->argv[i-1], tmp);
+        v->argv[i-1][tmp_size] = '\0';
     }
-    v->argc = argc;
+    v->argc = argc - 2;
     v->type = CMD_NO;
 
     return v;
@@ -100,101 +211,26 @@ cmdval cmd_eval(cmdval v)
     }
 }
 
-static cmdval _cmd_eval(cmdval v)
-{
-    char *cmd_name;
-    cmd_name = v->argv[0];
 
-    if(strcmp(cmd_name, "help") == 0)
-    {
-        v->type = CMD_RES;
-        v->result = help_msg();
-        return v;
-    }
-
-    if(strcmp(cmd_name, "version") == 0)
-    {
-        v->type = CMD_RES;
-        v->result = version_msg();
-        return v;
-    }
-
-    if(strcmp(cmd_name, "info") == 0)
-    {
-        if(v->argc != 2)
-        {
-            cmd_del(v);
-            return cmd_error("Info required one argument");
-        }
-        
-        v->result = info(v->argv[1]);
-        v->type = CMD_RES;
-        return v;
-    }
-
-    return cmd_error("Unknown Eval Here");
-}
-
-static char *help_msg()
-{
-    const char *msg = "[+]Use #[lang] to switch\n \
-                       [1]lisp\n[2]cmd";
-    char *v;
-    int len;
-
-    len = strlen(msg);
-    v = (char *)malloc(len + 1);
-    strcpy(v, msg);
-    v[len] = '\0';
-
-    return v;
-}
-
-static char *version_msg()
-{
-    const char *msg = "[+]version 0.2\n";
-    char *v;
-    int len;
-
-    len = strlen(msg);
-    v = (char *)malloc(len + 1);
-    strcpy(v, msg);
-    v[len] = '\0';
-
-    return v;
-}
-
-
-static char *info(char *msg)
-{
-    char *v;
-    int len;
-
-    len = strlen(msg);
-    v = (char *)malloc(len + 1);
-    strcpy(v, msg);
-    v[len] = '\0';
-
-    return v;
-}
 
 // 5. support prinln
-void cmd_print(cmdval v)
+void cmd_println(cmdval v)
 {
     switch(v->type)
     {
         case CMD_ERR:
             printf("[x]Error!\n");
-            printf("\t%s\n", v->result);
+            printf("\t%s", v->result);
             break;
         case CMD_RES:
-            printf("[v]%s\n", v->result);
+            printf("%s\n", v->result);
             break;
         case CMD_NO:
         default:
             printf("[?]impossible happend\n");
             break;
     }
+    puts("\n");
 }
 
 // 6. support del
@@ -211,25 +247,3 @@ void cmd_del(cmdval v)
     free(v);
 }
 
-static cmdval cmd_error(char *msg)
-{
-    cmdval v;
-    v = cmd_init_val(0);
-
-    int size = strlen(msg) + 1;
-    v->result = (char *)malloc(size);
-    strcpy(v->result, msg);
-    v->result[size] = '\0';
-
-    return v;
-}
-
-static cmdval cmd_init_val(int argc)
-{
-    v = (cmdval)malloc(sizeof(struct CmdValStruct));
-    v->type = CMD_ERR;
-    v->result = NULL;
-    v->argc = argc;
-    v->argv = (char **)malloc(sizeof(char *) * argc);
-    return v;
-}
